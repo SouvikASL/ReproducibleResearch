@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-<title>&ldquo;Reproducible research : peer assessment 1&rdquo;</title>
+<title>Reproducible research : peer assessments 1&quot;</title>
 
 <script type="text/javascript">
 window.onload = function() {
@@ -201,25 +201,17 @@ hr {
 </head>
 
 <body>
-<h1>&ldquo;Reproducible research : peer assessment 1&rdquo;</h1>
-
-<p>This document presents the results of peer assessments 1 of course Reproducible Research on coursera. This assignment makes use of data from a personal activity monitoring device. This device collects data at 5 minute intervals through out the day. The data consists of two months of data from an anonymous individual collected during the months of October and November, 2012 and include the number of steps taken in 5 minute intervals each day.</p>
-
-<p>This document presents the results of the Reproducible Research&#39;s Peer Assessment 1 in a report using a single R markdown document that can be processed by knitr and be transformed into an HTML file.</p>
-
-<p>Through this report you can see that activities on weekdays mostly follow a work related routine, where we find some more intensity activity in little a free time that the employ can made some sport.</p>
-
-<p>An important consideration is the fact of our data presents as a t-student distribution (see both histograms), it means that the impact of imputing missing values with the mean has a good impact on our predictions without a significant distortion in the distribution of the data.</p>
+<h1>Reproducible research : peer assessments 1&quot;</h1>
 
 <h2>Load data set</h2>
 
-<pre><code class="r">data &lt;- read.csv(&quot;activity.csv&quot;, header = T)
+<pre><code class="r">data &lt;- read.csv(&quot;activity.csv&quot;, as.is=TRUE)
 </code></pre>
 
 <h2>Process data set</h2>
 
 <pre><code class="r"># create a subset with NA removed
-dataNaOmit &lt;- subset(data, is.na(data$steps) == F)
+data.activity &lt;- na.omit(data)
 </code></pre>
 
 <h2>What is mean total number of steps taken per day?</h2>
@@ -229,27 +221,27 @@ dataNaOmit &lt;- subset(data, is.na(data$steps) == F)
 <li>Calculate and report the mean and median total number of steps taken per day</li>
 </ul>
 
-<pre><code class="r">stepsTotalPerDay &lt;- tapply(data$steps, data$date, sum)
-hist(stepsTotalPerDay, breaks = 6, main = &quot;Frequency of number of steps per day&quot;, 
+<pre><code class="r">totalStepsPerDay &lt;- tapply(data.activity$steps, data.activity$date, sum)
+hist(totalStepsPerDay, breaks = 6, main = &quot;Frequency of number of steps per day&quot;, 
     xlab = &quot;Number of steps per day&quot;, ylab = &quot;Frequency&quot;, col = &quot;red&quot;)
 </code></pre>
 
 <p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-3"/> </p>
 
-<pre><code class="r">stepsMeanPerDay &lt;- tapply(data$steps, data$date, mean, na.rm = T)
+<pre><code class="r">meanStepsPerDay &lt;- tapply(data.activity$steps, data.activity$date, mean, na.rm = T)
 </code></pre>
 
-<p>Mean total number of steps taken per day:</p>
+<p>Mean of total number of steps taken per day:</p>
 
-<pre><code class="r">mean(stepsTotalPerDay, na.rm = T)
+<pre><code class="r">mean(totalStepsPerDay)
 </code></pre>
 
 <pre><code>## [1] 10766.19
 </code></pre>
 
-<p>Median total number of steps taken per day:</p>
+<p>Median of total number of steps taken per day:</p>
 
-<pre><code class="r">median(stepsTotalPerDay, na.rm = T)
+<pre><code class="r">median(totalStepsPerDay)
 </code></pre>
 
 <pre><code>## [1] 10765
@@ -259,10 +251,10 @@ hist(stepsTotalPerDay, breaks = 6, main = &quot;Frequency of number of steps per
 
 <ul>
 <li>Make a time series plot (i.e. type = &ldquo;l&rdquo;) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)</li>
-<li>Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?</li>
+<li>Which 5-minute interval, on average across all the days in the data.activityset, contains the maximum number of steps?</li>
 </ul>
 
-<pre><code class="r">stepsMeanPerInterval &lt;- tapply(data$steps, data$interval, mean, na.rm = T)
+<pre><code class="r">stepsMeanPerInterval &lt;- tapply(data.activity$steps, data.activity$interval, mean, na.rm = T)
 plot(stepsMeanPerInterval, type = &quot;l&quot;, main = (&quot;Steps vs. Interval (daily average)&quot;), 
     ylab = &quot;# of steps&quot;)
 </code></pre>
@@ -309,15 +301,9 @@ tmp_dataTest[is.na(tmp_dataTest)] = 1
 data_NoMissing &lt;- data
 data_NoMissing$steps &lt;- tmp_stepsMeanPerInterval * tmp_dataTest
 
-
-# stepsMeanPerDay_NoMissing &lt;-
-# tapply(data_NoMissing$steps,data_NoMissing$date,mean,na.rm=T)
-# stepsMedianPerDay_NoMissing &lt;-
-# tapply(data_NoMissing$steps,data_NoMissing$date,median,na.rm=T)
-
-stepsTotalPerDay_NoMissing &lt;- tapply(data_NoMissing$steps, data_NoMissing$date, 
+totalStepsPerDay_NoMissing &lt;- tapply(data_NoMissing$steps, data_NoMissing$date, 
     sum)
-hist(stepsTotalPerDay_NoMissing, breaks = 6, main = &quot;Frequency of number of steps per day&quot;, 
+hist(totalStepsPerDay_NoMissing, breaks = 6, main = &quot;Frequency of number of steps per day&quot;, 
     xlab = &quot;Number of steps per day&quot;, ylab = &quot;Frequency&quot;, col = &quot;red&quot;)
 </code></pre>
 
@@ -331,7 +317,7 @@ hist(stepsTotalPerDay_NoMissing, breaks = 6, main = &quot;Frequency of number of
 
 <p>Mean total number of steps taken per day (missing replaced by mean for that interval):</p>
 
-<pre><code class="r">mean(stepsTotalPerDay_NoMissing)
+<pre><code class="r">mean(totalStepsPerDay_NoMissing)
 </code></pre>
 
 <pre><code>## [1] 10766.19
@@ -339,7 +325,7 @@ hist(stepsTotalPerDay_NoMissing, breaks = 6, main = &quot;Frequency of number of
 
 <p>Median total number of steps taken per day (missing replaced by mean for that interval):</p>
 
-<pre><code class="r">median(stepsTotalPerDay_NoMissing)
+<pre><code class="r">median(totalStepsPerDay_NoMissing)
 </code></pre>
 
 <pre><code>## [1] 10766.19
@@ -359,21 +345,21 @@ hist(stepsTotalPerDay_NoMissing, breaks = 6, main = &quot;Frequency of number of
 </ul>
 
 <pre><code class="r"># Create a factor variable with two levels (weekday, weekend-day)
-tmpLT &lt;- as.POSIXlt(data$date, format = &quot;%Y-%m-%d&quot;)
+tmpLT &lt;- as.POSIXlt(data.activity$date, format = &quot;%Y-%m-%d&quot;)
 tmpWeekDays &lt;- tmpLT$wday
 tmpWeekDays[tmpWeekDays == 0] = 0
 tmpWeekDays[tmpWeekDays == 6] = 0
 tmpWeekDays[tmpWeekDays != 0] = 1
 tmpWeekDaysFactor &lt;- factor(tmpWeekDays, levels = c(0, 1))
 # Add the factor variable to the data
-data$WD &lt;- tmpWeekDaysFactor
+data.activity$WD &lt;- tmpWeekDaysFactor
 # Calculate the mean
-stepsMeanPerWeekday &lt;- tapply(data$steps, list(data$interval, data$WD), mean, 
+stepsMeanPerWeekday &lt;- tapply(data.activity$steps, list(data.activity$interval, data.activity$WD), mean, 
     na.rm = T)
 
 par(mfrow = c(2, 1))
 # Display the 2 plots
-with(data, {
+with(data.activity, {
     par(mai = c(0, 1, 1, 0))
     plot(stepsMeanPerWeekday[, 1], type = &quot;l&quot;, main = (&quot;Steps vs. Interval&quot;), 
         xaxt = &quot;n&quot;, ylab = &quot;Week ends&quot;)

@@ -1,19 +1,10 @@
-# "Reproducible research : peer assessment 1"
-
-
-This document presents the results of peer assessments 1 of course Reproducible Research on coursera. This assignment makes use of data from a personal activity monitoring device. This device collects data at 5 minute intervals through out the day. The data consists of two months of data from an anonymous individual collected during the months of October and November, 2012 and include the number of steps taken in 5 minute intervals each day.
-
-This document presents the results of the Reproducible Research's Peer Assessment 1 in a report using a single R markdown document that can be processed by knitr and be transformed into an HTML file.
-
-Through this report you can see that activities on weekdays mostly follow a work related routine, where we find some more intensity activity in little a free time that the employ can made some sport.
-
-An important consideration is the fact of our data presents as a t-student distribution (see both histograms), it means that the impact of imputing missing values with the mean has a good impact on our predictions without a significant distortion in the distribution of the data.
+# Reproducible research : peer assessments 1"
 
 ## Load data set
 
 
 ```r
-data <- read.csv("activity.csv", header = T)
+data <- read.csv("activity.csv", as.is=TRUE)
 ```
 
 ## Process data set
@@ -21,7 +12,7 @@ data <- read.csv("activity.csv", header = T)
 
 ```r
 # create a subset with NA removed
-dataNaOmit <- subset(data, is.na(data$steps) == F)
+data.activity <- na.omit(data)
 ```
 
 ## What is mean total number of steps taken per day?
@@ -31,8 +22,8 @@ dataNaOmit <- subset(data, is.na(data$steps) == F)
 
 
 ```r
-stepsTotalPerDay <- tapply(data$steps, data$date, sum)
-hist(stepsTotalPerDay, breaks = 6, main = "Frequency of number of steps per day", 
+totalStepsPerDay <- tapply(data.activity$steps, data.activity$date, sum)
+hist(totalStepsPerDay, breaks = 6, main = "Frequency of number of steps per day", 
     xlab = "Number of steps per day", ylab = "Frequency", col = "red")
 ```
 
@@ -40,23 +31,23 @@ hist(stepsTotalPerDay, breaks = 6, main = "Frequency of number of steps per day"
 
 
 ```r
-stepsMeanPerDay <- tapply(data$steps, data$date, mean, na.rm = T)
+meanStepsPerDay <- tapply(data.activity$steps, data.activity$date, mean, na.rm = T)
 ```
 
-Mean total number of steps taken per day:
+Mean of total number of steps taken per day:
 
 ```r
-mean(stepsTotalPerDay, na.rm = T)
+mean(totalStepsPerDay)
 ```
 
 ```
 ## [1] 10766.19
 ```
-Median total number of steps taken per day:
+Median of total number of steps taken per day:
 
 
 ```r
-median(stepsTotalPerDay, na.rm = T)
+median(totalStepsPerDay)
 ```
 
 ```
@@ -66,11 +57,11 @@ median(stepsTotalPerDay, na.rm = T)
 ## What is the average daily activity pattern?
 
 * Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
-* Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+* Which 5-minute interval, on average across all the days in the data.activityset, contains the maximum number of steps?
 
 
 ```r
-stepsMeanPerInterval <- tapply(data$steps, data$interval, mean, na.rm = T)
+stepsMeanPerInterval <- tapply(data.activity$steps, data.activity$interval, mean, na.rm = T)
 plot(stepsMeanPerInterval, type = "l", main = ("Steps vs. Interval (daily average)"), 
     ylab = "# of steps")
 ```
@@ -122,15 +113,9 @@ tmp_dataTest[is.na(tmp_dataTest)] = 1
 data_NoMissing <- data
 data_NoMissing$steps <- tmp_stepsMeanPerInterval * tmp_dataTest
 
-
-# stepsMeanPerDay_NoMissing <-
-# tapply(data_NoMissing$steps,data_NoMissing$date,mean,na.rm=T)
-# stepsMedianPerDay_NoMissing <-
-# tapply(data_NoMissing$steps,data_NoMissing$date,median,na.rm=T)
-
-stepsTotalPerDay_NoMissing <- tapply(data_NoMissing$steps, data_NoMissing$date, 
+totalStepsPerDay_NoMissing <- tapply(data_NoMissing$steps, data_NoMissing$date, 
     sum)
-hist(stepsTotalPerDay_NoMissing, breaks = 6, main = "Frequency of number of steps per day", 
+hist(totalStepsPerDay_NoMissing, breaks = 6, main = "Frequency of number of steps per day", 
     xlab = "Number of steps per day", ylab = "Frequency", col = "red")
 ```
 
@@ -146,7 +131,7 @@ Mean total number of steps taken per day (missing replaced by mean for that inte
 
 
 ```r
-mean(stepsTotalPerDay_NoMissing)
+mean(totalStepsPerDay_NoMissing)
 ```
 
 ```
@@ -156,7 +141,7 @@ Median total number of steps taken per day (missing replaced by mean for that in
 
 
 ```r
-median(stepsTotalPerDay_NoMissing)
+median(totalStepsPerDay_NoMissing)
 ```
 
 ```
@@ -178,21 +163,21 @@ plot(stepsMeanPerInterval_NoMissing, type = "l", xlab = "Interval", ylab = "# of
 
 ```r
 # Create a factor variable with two levels (weekday, weekend-day)
-tmpLT <- as.POSIXlt(data$date, format = "%Y-%m-%d")
+tmpLT <- as.POSIXlt(data.activity$date, format = "%Y-%m-%d")
 tmpWeekDays <- tmpLT$wday
 tmpWeekDays[tmpWeekDays == 0] = 0
 tmpWeekDays[tmpWeekDays == 6] = 0
 tmpWeekDays[tmpWeekDays != 0] = 1
 tmpWeekDaysFactor <- factor(tmpWeekDays, levels = c(0, 1))
 # Add the factor variable to the data
-data$WD <- tmpWeekDaysFactor
+data.activity$WD <- tmpWeekDaysFactor
 # Calculate the mean
-stepsMeanPerWeekday <- tapply(data$steps, list(data$interval, data$WD), mean, 
+stepsMeanPerWeekday <- tapply(data.activity$steps, list(data.activity$interval, data.activity$WD), mean, 
     na.rm = T)
 
 par(mfrow = c(2, 1))
 # Display the 2 plots
-with(data, {
+with(data.activity, {
     par(mai = c(0, 1, 1, 0))
     plot(stepsMeanPerWeekday[, 1], type = "l", main = ("Steps vs. Interval"), 
         xaxt = "n", ylab = "Week ends")
